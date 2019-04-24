@@ -6,4 +6,8 @@ bookController.getAll = (req, res) => {
     })
 }
 
+bookController.get = (req, res) => {
+    
+}
+
 export default bookController;
