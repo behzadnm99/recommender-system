@@ -6,9 +6,9 @@ import cors from 'cors';
 
 import config from './consts';
 
-import bookRouter from './routes/book';
-import movieRouter from './routes/movie'
-import userRouter from './routes/user'
+// import bookRouter from './routes/book';
+// import movieRouter from './routes/movie'
+// import userRouter from './routes/user'
 import connctToDb from './config/connect'
 
 import './models/user';
@@ -21,11 +21,11 @@ app.use(session({ secret: 'passport-tutorial', cookie: { maxAge: 60000 }, resave
 
 app.use(morgan('tiny'))
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use('/api/v1', bookRouter);
-app.use('/api/v1', movieRouter);
-app.use('/api/v1', userRouter);
+// app.use('/api/v1', bookRouter);
+// app.use('/api/v1', movieRouter);
+app.use(require('./routes'));
 
 connctToDb()
 
