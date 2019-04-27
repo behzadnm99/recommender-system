@@ -6,6 +6,6 @@ const bookSchema = new Schema({
     username: String
 })
 
-const bookModel = mongoose.Model('book', bookSchema);
+const bookModel = mongoose.model('book', bookSchema);
 
 export default bookModel;
