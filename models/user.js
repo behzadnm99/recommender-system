@@ -11,7 +11,8 @@ const userSchema = new Schema({
     salt: String,
     email: String,
     books: [{type: Schema.Types.ObjectId, ref: 'book' }],
-    movies: [{type: Schema.Types.ObjectId, ref: 'movie'}]
+    movies: [{type: Schema.Types.ObjectId, ref: 'movie'}],
+    comments: [{type: Schema.Types.ObjectId, ref: 'comment'}]
 })
 
 userSchema.methods.setPassword = ((password) => {
