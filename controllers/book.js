@@ -1,6 +1,8 @@
 import Books from '../models/book'
+import Users from '../models/user';
 
-const bookController = {};
+const bookController = {
+};
 
 bookController.getAll = (req, res) => {
     Books.find((err, users) => {
@@ -22,8 +24,27 @@ bookController.get = (req, res) => {
 }
 
 
-bookController.post = (req, res) => {
+bookController.post = async(req, res) => {
+    const { payload: { id } } = req;
+    const { body } = req;
 
+    try {
+        let newBook = await Books.create(body.book);
+        let user = await Users.findById(id);
+        user.books.push(newBook);
+        user.save();
+        res.status(200).send({
+            status: 'success',
+            message: 'book added to user library successfully'
+        })
+
+    } catch(err) {
+        res.status(400).send({
+            status: 'failed',
+            message: err.name,
+            description: err.message
+        })
+    }
 }
 
 bookController.put = (req, res) => {

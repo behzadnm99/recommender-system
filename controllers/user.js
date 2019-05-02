@@ -52,10 +52,8 @@ userController.login = (req, res, next) => {
   }
 
   return passport.authenticate('local', { session: false }, (err, passportUser, info) => {    
-    
-    console.log(passportUser)
-    if(err) {
-      return next(err);
+      if(err) {
+        return next(err);
     }
 
     if(passportUser) {
@@ -73,7 +71,6 @@ userController.login = (req, res, next) => {
 
 userController.current = (req, res, next) => {
     const { payload: { id } } = req;
-    console.log(req.payload)
     return Users.findById(id)
       .then((user) => {
         if(!user) {
