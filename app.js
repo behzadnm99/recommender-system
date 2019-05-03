@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import cors from 'cors';
+import expressValidator from 'express-validator';
 
 import config from './consts';
 
@@ -19,6 +20,7 @@ app.use(session({ secret: 'passport-tutorial', cookie: { maxAge: 60000 }, resave
 app.use(morgan('tiny'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(expressValidator());
 
 app.use(require('./routes'));
 

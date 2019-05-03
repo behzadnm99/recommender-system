@@ -3,11 +3,11 @@ const Schema = mongoose.Schema;
 
 const movieSchema = new Schema({
     name: {type: String, required: true},
-    stars: Number,
-    genres: [{type: Schema.Types.ObjectId, ref: 'genre'}],
+    stars: {type:Number, required: true},
+    description: {type: String, required: true},
     imdb: Number,
     year: Number,
-    description: String,
+    genres: [{type: Schema.Types.ObjectId, ref: 'genre'}],
     comments: [{type: Schema.Types.ObjectId, ref: 'comment'}]
 })
 

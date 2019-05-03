@@ -1,5 +1,6 @@
 import Books from '../models/book'
 import Users from '../models/user';
+import { check, validationResult } from  'express-validator/check';
 
 const bookController = {
 };
@@ -19,12 +20,18 @@ bookController.getAll = (req, res) => {
 }
 
 bookController.get = (req, res) => {
-    console.log(req.params)
-    res.send({'msg':'asd'})
+
 }
 
-
-bookController.post = async(req, res) => {
+bookController.post = async(req, res, next) => {
+    
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(422).json({
+            errors: errors.array()
+        })
+    }
+    
     const { payload: { id } } = req;
     const { body } = req;
 
@@ -36,14 +43,13 @@ bookController.post = async(req, res) => {
         res.status(200).send({
             status: 'success',
             message: 'book added to user library successfully'
-        })
-
+        });
     } catch(err) {
         res.status(400).send({
             status: 'failed',
             message: err.name,
             description: err.message
-        })
+        });
     }
 }
 
