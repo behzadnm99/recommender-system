@@ -4,18 +4,22 @@ import { check, validationResult } from  'express-validator/check';
 
 const movieController = {};
 
-movieController.getAll = (req, res) => {
-    Books.find((err, users) => {
-        if(err){
-            res.status(400).send({
-                'err': err.toString()
-            })
-        } else if(users) {
-            res.status(200).send({
-                users: users
-            })
-        }
-    })
+movieController.getAll = async(req, res) => {
+    const {page, genre} = req.query;
+
+    try {
+        const movies = await Movies.find({genre: genre}).skip((10 * page) - 10).limit(10);
+        res.send({
+            status: 'success',
+            data:movies
+        })
+    } catch(err) {
+        res.status(400).send({
+            status: 'failed',
+            message: err.name,
+            description: err.message
+        })
+    }
 }
 
 movieController.get = (req, res) => {
