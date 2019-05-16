@@ -35,6 +35,7 @@ userController.signin = (req, res, next) => {
 
 userController.login = (req, res, next) => {
   const { body: { user } } = req;
+  console.log(req.body)
   if(!user.username) {
     return res.status(422).json({
       errors: {
@@ -52,7 +53,7 @@ userController.login = (req, res, next) => {
   }
 
   return passport.authenticate('local', { session: false }, (err, passportUser, info) => {    
-      if(err) {
+    if(err) {
         return next(err);
     }
 
@@ -63,7 +64,7 @@ userController.login = (req, res, next) => {
       return res.json({ user: user.toAuthJSON() }); 
     }
 
-    return res.send({
+    return res.status(400).send({
       info
     });
   })(req, res, next);

@@ -11,11 +11,12 @@ import connctToDb from './config/connect'
 
 import './models/user';
 import './config/passport'
+import './config/minio';
 
 const app = express();
 
 // config app
-app.use(cors());
+app.use(cors())
 app.use(session({ secret: 'passport-tutorial', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 app.use(morgan('tiny'))
 app.use(bodyParser.json());
