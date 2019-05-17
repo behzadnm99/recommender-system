@@ -5,10 +5,11 @@ import { check, validationResult } from  'express-validator/check';
 const movieController = {};
 
 movieController.getAll = async(req, res) => {
-    const {page, genre} = req.query;
-
+    const {page, genre, limit} = req.query;
+    const _limit = Number(limit);
+    const _page = Number(page);
     try {
-        const movies = await Movies.find({genre: genre}).skip((10 * page) - 10).limit(10);
+        const movies = await Movies.find({genre: genre}).sort('createdAt').skip((_limit * _page) - _limit).limit(_limit);
         res.send({
             status: 'success',
             data:movies

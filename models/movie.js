@@ -9,7 +9,7 @@ const movieSchema = new Schema({
     year: Number,
     genres: [{type: Schema.Types.ObjectId, ref: 'genre'}],
     comments: [{type: Schema.Types.ObjectId, ref: 'comment'}]
-})
+}, {timestamps: true})
 
 const movieModel = mongoose.model('movie', movieSchema);
 

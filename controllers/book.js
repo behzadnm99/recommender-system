@@ -6,10 +6,12 @@ const bookController = {
 };
 
 bookController.getAll = async(req, res) => {
-    const {page, genre} = req.query;
-
+    const {page, genre, limit} = req.query;
+    const _limit = Number(limit)
+    const _page = Number(page);
+    console.log(req.query)
     try {
-        const books = await Books.find({genre: genre}).skip((10 * page) - 10).limit(10);
+        const books = await Books.find({genre: genre}).sort('-createdAt').skip((_limit * _page) - limit).limit(_limit);
         res.send({
             status: 'success',
             data: books
