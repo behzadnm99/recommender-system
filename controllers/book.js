@@ -1,15 +1,17 @@
 import Books from '../models/book'
 import Users from '../models/user';
 import { check, validationResult } from  'express-validator/check';
+import minioClicent from '../config/minio';
+import util from 'util';
 
 const bookController = {
 };
 
 bookController.getAll = async(req, res) => {
     const {page, genre, limit} = req.query;
-    const _limit = Number(limit)
-    const _page = Number(page);
-    console.log(req.query)
+    const _limit = Number(limit) || 10;
+    const _page = Number(page) || 1;
+   
     try {
         const books = await Books.find({genre: genre}).sort('-createdAt').skip((_limit * _page) - limit).limit(_limit);
         res.send({
@@ -31,26 +33,32 @@ bookController.get = (req, res) => {
 
 bookController.post = async(req, res, next) => {
     
+    const { payload: { id } } = req;
+    const { body } = req;
+    console.log(body);
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
         return res.status(422).json({
             errors: errors.array()
         })
     }
-    
-    const { payload: { id } } = req;
-    const { body } = req;
 
     try {
-        let newBook = await Books.create(body.book);
+        let newBook = await Books.create(body);
         let user = await Users.findById(id);
         user.books.push(newBook);
         user.save();
+
+        // const fileName = `books-${newBook.id}`;   
+        if(req.file) {
+            await minioClicent.fPutObject("books-img", req.file.originalname, req.file.path, {entity: 'books', user: id, parentId: newBook._id});
+        }
         res.status(200).send({
             status: 'success',
             message: 'book added to user library successfully'
         });
     } catch(err) {
+        console.log(err)
         res.status(400).send({
             status: 'failed',
             message: err.name,

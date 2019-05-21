@@ -35,7 +35,7 @@ userController.signin = (req, res, next) => {
 
 userController.login = (req, res, next) => {
   const { body: { user } } = req;
-  console.log(req.body)
+  console.log('user');
   if(!user.username) {
     return res.status(422).json({
       errors: {
