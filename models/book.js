@@ -9,6 +9,7 @@ const bookSchema = new Schema({
     translator: String,
     year: Number,
     genres: [{type: Schema.Types.ObjectId, ref: 'genre'}],
+    coverName: String
 }, {timestamps: true});
 
 const bookModel = mongoose.model('book', bookSchema);

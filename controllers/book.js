@@ -1,8 +1,9 @@
+'use-strict';
+
 import Books from '../models/book'
 import Users from '../models/user';
 import { check, validationResult } from  'express-validator/check';
 import minioClicent from '../config/minio';
-import util from 'util';
 
 const bookController = {
 };
@@ -34,8 +35,8 @@ bookController.get = (req, res) => {
 bookController.post = async(req, res, next) => {
     
     const { payload: { id } } = req;
-    const { body } = req;
-    console.log(body);
+    const { body, file } = req;
+
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
         return res.status(422).json({
@@ -44,14 +45,13 @@ bookController.post = async(req, res, next) => {
     }
 
     try {
-        let newBook = await Books.create(body);
+        const bookObject = Object.assign({},{coverName: file.filename},body);
+        let newBook = await Books.create(bookObject);
         let user = await Users.findById(id);
         user.books.push(newBook);
         user.save();
-
-        // const fileName = `books-${newBook.id}`;   
         if(req.file) {
-            await minioClicent.fPutObject("books-img", req.file.originalname, req.file.path, {entity: 'books', user: id, parentId: newBook._id});
+            await minioClicent.fPutObject("books-img", req.file.filename, req.file.path, {entity: 'books', user: id, parentId: newBook._id});
         }
         res.status(200).send({
             status: 'success',

@@ -1,6 +1,7 @@
 import Movies from '../models/movie';
 import Users from '../models/user';
 import { check, validationResult } from  'express-validator/check';
+import minioClient from '../config/minio';
 
 const movieController = {};
 
@@ -30,21 +31,25 @@ movieController.get = (req, res) => {
 
 movieController.post = async(req, res) => {
     
+    const { payload: { id } } = req;
+    const { body, file } = req;
+
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
         return res.status(422).json({
             errors: errors.array()
         })
     }
-    
-    const { payload: { id } } = req;
-    const { body } = req;
 
     try {
-        let newMovie = await Movies.create(body.movie);
+        let movieObject = Object.assign({},{coverName: file.filename},body);
+        let newMovie = await Movies.create(movieObject);
         let user = await Users.findById(id);
         user.movies.push(newMovie);
         user.save();
+        if(file) {
+            const minioCover = await minioClient.fPutObject("movies-img", file.originalname, file.path, {entity: 'movie', user: id, parentId: newMovie._id});
+        }
         res.status(200).send({
             status: 'success',
             message: 'movie added to user library successfully'

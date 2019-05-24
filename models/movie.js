@@ -8,7 +8,8 @@ const movieSchema = new Schema({
     imdb: Number,
     year: Number,
     genres: [{type: Schema.Types.ObjectId, ref: 'genre'}],
-    comments: [{type: Schema.Types.ObjectId, ref: 'comment'}]
+    comments: [{type: Schema.Types.ObjectId, ref: 'comment'}],
+    coverName: String
 }, {timestamps: true})
 
 const movieModel = mongoose.model('movie', movieSchema);
