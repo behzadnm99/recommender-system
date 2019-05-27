@@ -51,7 +51,7 @@ bookController.post = async(req, res, next) => {
         user.books.push(newBook);
         user.save();
         if(req.file) {
-            await minioClicent.fPutObject("books-img", req.file.filename, req.file.path, {entity: 'books', user: id, parentId: newBook._id});
+            await minioClicent.fPutObject("books-img", file.filename, file.path, {entity: 'books', user: id, parentId: newBook._id});
         }
         res.status(200).send({
             status: 'success',

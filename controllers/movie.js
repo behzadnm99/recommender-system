@@ -48,7 +48,7 @@ movieController.post = async(req, res) => {
         user.movies.push(newMovie);
         user.save();
         if(file) {
-            const minioCover = await minioClient.fPutObject("movies-img", file.originalname, file.path, {entity: 'movie', user: id, parentId: newMovie._id});
+            const minioCover = await minioClient.fPutObject("movies-img", file.filename, file.path, {entity: 'movie', user: id, parentId: newMovie._id});
         }
         res.status(200).send({
             status: 'success',
